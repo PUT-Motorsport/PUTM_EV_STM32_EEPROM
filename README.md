@@ -6,4 +6,7 @@ Supported MCUs:
 - STM32H5
 
 For now to set your MCU you should change include_directories and sources files in CMakeLists.txt.
-You also need to configure defines needed by C library in eeprom_emul_conf.h
+You also need to:
+- configure defines needed by C library in eeprom_emul_conf.h
+- include STM32 CRC library
+- call HAL_FLASH_Unlock(); before initialization
