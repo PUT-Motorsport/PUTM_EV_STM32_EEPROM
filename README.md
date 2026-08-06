@@ -1,13 +1,9 @@
-# Project Template
+EEPROM emulation library for STM32, based on X-CUBE-EEPROM.
+Supported MCUs:
+- STM32G0
+- STM32G4
+- STM32L4
+- STM32H5
 
-A default project template.
-
-## Code Formatting
-
-If you want to format the code automatically, you can set up a pre-commit hook with the following command:
-
-```bash
-./tools/install-hooks.sh
-```
-
-Make sure to install `clang-format` and `dos2unix` before running the command.
+For now to set your MCU you should change include_directories and sources files in CMakeLists.txt.
+You also need to configure defines needed by C library in eeprom_emul_conf.h
