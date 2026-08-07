@@ -9,9 +9,25 @@ EEPROM emulation library for STM32, based on X-CUBE-EEPROM.
 * STM32H5
 
 ## Project Configuration (CMake)
-To set the target MCU for your project, simply edit `CMakeLists.txt` and change the `STM32G4` directory name to match your target MCU family (e.g., `STM32G0`, `STM32L4`, or `STM32H5`) in these two paths:
-* In `EEPROM_LIBRARY_INC`: `${CMAKE_CURRENT_SOURCE_DIR}/X-CUBE-EEPROM/Porting/STM32G4`
-* In `EEPROM_LIBRARY_SRC`: `${CMAKE_CURRENT_SOURCE_DIR}/X-CUBE-EEPROM/Porting/STM32G4/flash_interface.c`
+To set the target MCU family for your project, open `CMakeLists.txt` and edit **one line** at the top of the file:
+
+```cmake
+set(STM32_FAMILY "G4")   # e.g. G0, G4, L4, H5
+```
+
+Everything else — include paths, source files, and porting layer — is resolved automatically based on this variable. There is no need to edit any other line or path in the file.
+
+Under the hood, the `CMakeLists.txt` derives the porting directory from `STM32_FAMILY`:
+
+```cmake
+set(EEPROM_PORTING_DIR ${CMAKE_CURRENT_SOURCE_DIR}/X-CUBE-EEPROM/Porting/STM32${STM32_FAMILY})
+```
+
+and automatically includes:
+* `EEPROM_LIBRARY_INC` → `X-CUBE-EEPROM/Porting/STM32${STM32_FAMILY}`
+* `EEPROM_LIBRARY_SRC` → `X-CUBE-EEPROM/Porting/STM32${STM32_FAMILY}/flash_interface.c`
+
+If an unsupported or misspelled family is set, CMake configuration will fail with a clear error message pointing at the missing porting directory, instead of failing silently at build/link time.
 
 ## Library Configuration (`eeprom_emul_conf.h`)
 The configuration file is located at `X-CUBE-EEPROM/Core/eeprom_emul_conf.h`. You need to adjust the following definitions according to your application and hardware:
@@ -108,4 +124,3 @@ You can also erase a specific variable from the EEPROM:
 ```cpp
 bool error = temp_var.erase();
 ```
-

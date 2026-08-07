@@ -13,7 +13,6 @@ extern "C" {
 
 #include "eeprom_emul.h"
 #include "eeprom_emul_types.h"
-#include "stm32g4xx_hal_def.h"
 
 #ifdef __cplusplus
 }
