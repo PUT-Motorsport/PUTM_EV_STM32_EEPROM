@@ -11,6 +11,7 @@
 extern "C" {
 #endif
 
+#include "eeprom_config.hpp"
 #include "eeprom_emul.h"
 #include "eeprom_emul_types.h"
 
