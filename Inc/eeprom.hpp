@@ -43,6 +43,7 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
     static constexpr uint32_t MAX_VARIABLE_COUNT = NB_OF_VARIABLES;
     uint32_t variable_count = 0;
     bool is_initialized = false;
+    bool cleanup_required = false;
     std::array<bool, MAX_VARIABLE_COUNT> address_map{};
 
   public:
@@ -127,7 +128,7 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
 
         HAL_StatusTypeDef write(SIZE_TYPE new_value) {
 
-            if(!eeprom.is_initialized ||
+            if(!eeprom.is_initialized || eeprom.cleanup_required ||
                state == VariableState::NOT_INITIALIZED)
                 return HAL_ERROR;
 
@@ -142,6 +143,11 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
             } else if constexpr(sizeof(SIZE_TYPE) == 4) {
                 status = EE_WriteVariable32bits(
                     address, std::bit_cast<uint32_t>(new_value));
+            }
+
+            if(status == EE_CLEANUP_REQUIRED) {
+                eeprom.cleanup_required = true;
+                status = EE_OK;
             }
 
             if(status != EE_OK) {
@@ -166,6 +172,11 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
                 status = EE_WriteVariable16bits(address, 0xFFFF);
             } else if constexpr(sizeof(SIZE_TYPE) == 4) {
                 status = EE_WriteVariable32bits(address, 0xFFFFFFFF);
+            }
+
+            if(status == EE_CLEANUP_REQUIRED) {
+                eeprom.cleanup_required = true;
+                status = EE_OK;
             }
 
             if(status != EE_OK) {
@@ -209,6 +220,20 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
         is_initialized = true;
         return HAL_OK;
     }
+
+    HAL_StatusTypeDef cleanup() {
+        if(!cleanup_required)
+            return HAL_ERROR;
+        EE_Status status = EE_OK;
+        status = EE_CleanUp();
+        if(status) {
+            return HAL_ERROR;
+        }
+        cleanup_required = false;
+        return HAL_OK;
+    }
+
+    [[nodiscard]] bool get_cleanup_required() const { return cleanup_required; }
 
     /** @brief Create new variable with init value
      *
