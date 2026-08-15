@@ -3,7 +3,7 @@
 /* --- Configuration of eeprom emulation in flash, can be custom --- */
 
 /* Start address of the 1st page in flash, for EEPROM emulation */
-#define START_PAGE_ADDRESS 0x08040000U
+#define START_PAGE_ADDRESS 0x0900C000U
 
 /* Number of 10Kcycles requested, minimum 1 for 10Kcycles (default), for
  * instance 10 to reach 100Kcycles. This factor will increase pages number */
@@ -23,3 +23,5 @@
 
 /* Polynomial to use for CRC calculation */
 #define CRC_POLYNOMIAL_VALUE 0x8005U
+
+#define EDATA_ENABLED true

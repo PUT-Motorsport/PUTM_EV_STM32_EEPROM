@@ -398,6 +398,34 @@ static void Error_Handler(void)
   }
 }
 
+void mpu_config_edata(void) {
+    MPU_Attributes_InitTypeDef attr = {0};
+    MPU_Region_InitTypeDef region = {0};
+
+    HAL_MPU_Disable();
+
+    /* Non-cacheable memory attribute /
+    attr.Number = MPU_ATTRIBUTES_NUMBER0;
+    attr.Attributes = 0;
+    HAL_MPU_ConfigMemoryAttributes(&attr);
+
+    / Bank 2 EDATA */
+    region.Enable = MPU_REGION_ENABLE;
+    region.Number = MPU_REGION_NUMBER0;
+    region.AttributesIndex = MPU_ATTRIBUTES_NUMBER0;
+
+    region.BaseAddress = 0x0900C000;
+    region.LimitAddress = 0x09017FFF;
+
+    region.AccessPermission = MPU_REGION_ALL_RW;
+    region.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+    region.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+
+    HAL_MPU_ConfigRegion(&region);
+
+    HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+}
+
 /**
   * @}
   */

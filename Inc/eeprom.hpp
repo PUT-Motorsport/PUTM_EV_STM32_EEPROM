@@ -197,6 +197,9 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
     HAL_StatusTypeDef init() {
 
         EE_Status status = EE_OK;
+#ifdef EDATA_ENABLED
+        mpu_config_edata();
+#endif
         status = EE_Init(EE_CONDITIONAL_ERASE);
         if(status) {
             is_initialized = false;
@@ -209,7 +212,7 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
 
     HAL_StatusTypeDef format() {
         EE_Status status = EE_OK;
-        status = EE_Init(EE_FORCED_ERASE);
+        status = EE_Format(EE_FORCED_ERASE);
         if(status) {
             is_initialized = false;
             return HAL_ERROR;
@@ -251,3 +254,4 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
         return Variable<SIZE_TYPE>{*this, address, SIZE_TYPE{}};
     }
 };
+
