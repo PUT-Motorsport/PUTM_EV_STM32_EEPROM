@@ -225,8 +225,6 @@ template <EepromAddressType ADDRESS_TYPE> class Eeprom {
     }
 
     HAL_StatusTypeDef cleanup() {
-        if(!cleanup_required)
-            return HAL_ERROR;
         EE_Status status = EE_OK;
         status = EE_CleanUp();
         if(status) {

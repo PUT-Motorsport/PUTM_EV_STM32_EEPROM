@@ -24,4 +24,4 @@
 /* Polynomial to use for CRC calculation */
 #define CRC_POLYNOMIAL_VALUE 0x8005U
 
-#define EDATA_ENABLED true
+#define EDATA_ENABLED 1

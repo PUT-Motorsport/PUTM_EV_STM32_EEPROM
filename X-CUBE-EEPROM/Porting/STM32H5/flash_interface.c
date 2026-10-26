@@ -404,12 +404,12 @@ void mpu_config_edata(void) {
 
     HAL_MPU_Disable();
 
-    /* Non-cacheable memory attribute /
+    /* Non-cacheable memory attribute */
     attr.Number = MPU_ATTRIBUTES_NUMBER0;
-    attr.Attributes = 0;
+    attr.Attributes = INNER_OUTER(MPU_NOT_CACHEABLE);
     HAL_MPU_ConfigMemoryAttributes(&attr);
 
-    / Bank 2 EDATA */
+    /* Bank 2 EDATA */
     region.Enable = MPU_REGION_ENABLE;
     region.Number = MPU_REGION_NUMBER0;
     region.AttributesIndex = MPU_ATTRIBUTES_NUMBER0;
